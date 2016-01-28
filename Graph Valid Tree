@@ -1,0 +1,58 @@
+
+//topology sort
+public class Solution {
+    public boolean validTree(int n, int[][] edges) {
+
+        if(edges.length != n-1)
+            return false;
+        HashMap<Integer, ArrayList<Integer>> map = new HashMap<Integer, ArrayList<Integer>>();
+        int[] degree = new int[n];
+        for(int i = 0; i < edges.length; i++){
+            for(int j = 0; j < 2; j++){
+                degree[edges[i][j]]++;
+            }
+            if(!map.containsKey(edges[i][0])) {
+                ArrayList<Integer> list = new ArrayList<Integer>();
+                list.add(edges[i][1]);
+                map.put(edges[i][0], list);
+            }
+            else
+                map.get(edges[i][0]).add(edges[i][1]);
+            if(!map.containsKey(edges[i][1])) {
+                ArrayList<Integer> list = new ArrayList<Integer>();
+                list.add(edges[i][0]);
+                map.put(edges[i][1],list);
+            }
+            else
+                map.get(edges[i][1]).add(edges[i][0]);
+
+        }
+        
+        Queue<Integer> q = new LinkedList();
+        for(int i = 0; i < n; i++){
+            if(degree[i] == 1)
+                q.offer(i);
+        }
+        while(!q.isEmpty()){
+            int tmp = q.poll();
+            degree[tmp]--;
+            int i = 0;
+
+            while(map.get(tmp) != null && i < map.get(tmp).size()){
+                if(degree[map.get(tmp).get(i)] >= 1)
+                    degree[map.get(tmp).get(i)]--;
+                if(degree[map.get(tmp).get(i)] == 1){
+                    q.offer(map.get(tmp).get(i));
+                }
+
+                i++;
+            }
+        }
+
+        for(int i = 0; i < n; i++)
+            if(degree[i] > 1)
+                return false;
+                
+        return true;
+    }
+}
