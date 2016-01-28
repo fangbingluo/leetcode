@@ -47,7 +47,6 @@ public class Solution {
                 else
                     res.get(map.get(tmp.right) + index).add(tmp.right.val);
             }
-                
         }
         return res;
     }
