@@ -1,0 +1,54 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ // BFS
+public class Solution {
+    
+    private int index = 0;
+    private HashMap<TreeNode, Integer> map = new HashMap<TreeNode, Integer>();
+    public List<List<Integer>> verticalOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if(root == null)
+            return res;
+        ArrayList<Integer> list1 = new ArrayList<Integer>();
+        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        q.offer(root);
+        list1.add(root.val);
+        res.add(list1);
+        map.put(root, 0);
+        while(!q.isEmpty()){
+            TreeNode tmp = q.poll();
+            if(tmp.left != null){
+                q.offer(tmp.left);
+                map.put(tmp.left, map.get(tmp) - 1);
+                if(map.get(tmp.left) + index < 0){
+                    ArrayList<Integer> list = new ArrayList<Integer>();
+                    list.add(tmp.left.val);
+                    res.add(0, list);
+                    index++;
+                }
+                else
+                    res.get(map.get(tmp.left) + index).add(tmp.left.val);
+            }
+            if(tmp.right != null){
+                q.offer(tmp.right);
+                map.put(tmp.right, map.get(tmp) + 1);
+                if(map.get(tmp.right) + index > res.size() - 1){
+                    ArrayList<Integer> list = new ArrayList<Integer>();
+                    list.add(tmp.right.val);
+                    res.add(res.size(), list);
+                }
+                else
+                    res.get(map.get(tmp.right) + index).add(tmp.right.val);
+            }
+                
+        }
+        return res;
+    }
+}
