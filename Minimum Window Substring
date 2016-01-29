@@ -1,0 +1,45 @@
+	public String minWindow(String s, String t) {
+        if(s.length() == 0 || t.length() == 0 || t.length() > s.length())
+            return "";
+        
+        HashMap<Character, Integer> map = new HashMap<Character, Integer>();
+        for(int i = 0; i < t.length(); i++){
+            if(!map.containsKey(t.charAt(i)))
+                map.put(t.charAt(i), 1);
+            else
+                map.put(t.charAt(i), map.get(t.charAt(i)) + 1);
+        }
+    
+        int start = 0;
+        while( start < s.length() && !map.containsKey(s.charAt(start)) )
+            start++;
+        
+        int min = Integer.MAX_VALUE;
+        int end = start;
+        int len = 0;
+        String res = "";
+        int flag = 0;        //to mark if the end subscript has changed
+        while(end < s.length()){
+            if( flag == 0 && map.containsKey(s.charAt(end))){
+                if(map.get(s.charAt(end)) > 0)
+                    len++;
+                map.put(s.charAt(end), map.get(s.charAt(end)) - 1);
+            }
+            if(start < s.length() && (!map.containsKey(s.charAt(start)) || map.get(s.charAt(start)) < 0 )){
+                if(map.containsKey(s.charAt(start)))
+            	    map.put(s.charAt(start), map.get(s.charAt(start)) + 1);
+            	start++;
+            	flag = 1;
+            	continue;
+            }
+            flag = 0;
+            if(len == t.length()){
+                if( (end - start + 1) < min){
+                    res = s.substring(start, end + 1);
+                    min = end - start + 1;
+                }
+            }
+            end++;
+        }
+        return res;
+    }
